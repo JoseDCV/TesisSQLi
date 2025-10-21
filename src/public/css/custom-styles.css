@@ -1,0 +1,24 @@
+.navbar-brand, .nav-link {
+    transition: color 0.3s ease;
+}
+
+.navbar-brand:hover, .nav-link:hover {
+    color: #39ff14 !important; /* Phosphorescent/neon green color */
+    text-shadow: 0 0 10px #39ff14, 0 0 20px #39ff14, 0 0 30px #39ff14;
+}
+
+/* Set initial color for specific navigation items */
+.navbar-brand, .nav-item .nav-link {
+    color: #fff !important;
+}
+
+/* Masthead styles */
+.masthead h1.text-uppercase {
+    color: #39ff14 !important; /* Verde fosforescente */
+    text-shadow: 0 0 10px #39ff14, 0 0 20px #39ff14;
+}
+
+.masthead h2.text-green {
+    color: #00bfff !important; /* Azul claro */
+    opacity: 0.9;
+}
