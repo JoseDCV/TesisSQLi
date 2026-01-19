@@ -12,8 +12,12 @@
         <!-- Google fonts-->  
         <link href="https://fonts.googleapis.com/css?family=Roboto|Inter|Orbitron" rel="stylesheet" />
         <style>
+            * {
+                box-sizing: border-box;
+            }
             body {
-                background-color: #0a0a0a;
+                background-image: url('https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?q=80&w=1920&auto=format&fit=crop');
+                background-size: cover;
                 color: #ffffff;
                 font-family: 'Roboto', sans-serif;
                 display: flex;
@@ -21,6 +25,16 @@
                 align-items: center;
                 height: 100vh;
                 margin: 0;
+                position: relative;
+            }
+            .overlay {
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background-color: rgba(0, 0, 0, 0.5);
+                z-index: 1;
             }
             .card {
                 background: rgba(255, 255, 255, 0.1);
@@ -28,21 +42,29 @@
                 backdrop-filter: blur(10px);
                 padding: 20px;
                 box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-                width: 300px;
+                width: 400px;
                 text-align: center;
+                position: relative;
+                border: 1px solid rgba(0, 255, 0, 0.3);
+                z-index: 2;
+            }
+            h2 {
+                font-family: 'Orbitron', sans-serif;
+                margin-bottom: 20px;
             }
             .tab {
                 display: inline-block;
-                padding: 10px 20px;
+                width: 50%;
+                padding: 10px 0;
                 cursor: pointer;
                 border: 1px solid transparent;
                 border-radius: 5px;
-                margin: 0 5px;
-                transition: background 0.3s;
+                margin: 0;
+                transition: background 0.3s, color 0.3s;
             }
             .tab.active {
-                background: rgba(255, 255, 255, 0.2);
-                border-color: #00ff00;
+                background: rgba(0, 255, 0, 0.5);
+                color: #ffffff;
             }
             input {
                 background: rgba(255, 255, 255, 0.2);
@@ -73,7 +95,9 @@
         </style>
     </head>
     <body id="page-top">
+        <div class="overlay"></div>
         <div class="card">
+            <h2>SYSTEM ACCESS</h2>
             <div class="tabs">
                 <div class="tab active" onclick="showForm('login')">Iniciar Sesión</div>
                 <div class="tab" onclick="showForm('register')">Registro</div>
