@@ -1,7 +1,7 @@
 <?php
 
 // Obtener credenciales de la base de datos desde variables de entorno o usar valores por defecto
-$host = getenv('DB_HOST') ?: 'localhost';
+$host = getenv('DB_HOST') ?: '127.0.0.1';
 $user = getenv('DB_USER') ?: 'root';
 $password = getenv('DB_PASSWORD') ?: '';
 $db_name = getenv('DB_NAME') ?: 'tesis_sqli';
