@@ -1,453 +1,113 @@
-# Proyecto de Tesis: Análisis de Vulnerabilidades de Inyección SQL
+# SecurityPro - Entorno CTF para el Entrenamiento Progresivo en Inyección SQL
 
-[![PHP 8.1+](https://img.shields.io/badge/PHP-8.1%2B-777BB4?style=flat-square&logo=php)](https://www.php.net/)
-[![MariaDB 10.5+](https://img.shields.io/badge/MariaDB-10.5%2B-003B6F?style=flat-square&logo=mariadb)](https://mariadb.org/)
-[![License MIT](https://img.shields.io/badge/License-MIT-green.svg?style=flat-square)](LICENSE)
-[![Código en Español](https://img.shields.io/badge/Documentaci%C3%B3n-Español-red?style=flat-square)]()
-
-## 📋 Tabla de Contenidos
-
-- [Descripción General](#descripción-general)
-- [Arquitectura del Proyecto](#arquitectura-del-proyecto)
-- [Stack Tecnológico](#stack-tecnológico)
-- [Instalación](#instalación)
-- [Estructura de Base de Datos](#estructura-de-base-de-datos)
-- [Uso](#uso)
-- [Roadmap](#roadmap)
-- [Licencia](#licencia)
+Un entorno de laboratorio técnico (CTF) desacoplado, diseñado para el entrenamiento progresivo y la investigación en vulnerabilidades de Inyección SQL (SQLi). El laboratorio está enfocado en tres niveles de complejidad creciente: Bypass de Autenticación, Union-Based SQLi y Blind SQLi. Todo el entorno está containerizado para garantizar un despliegue rápido, seguro y aislado.
 
 ---
 
-## 📘 Descripción General
+## Arquitectura del Sistema (Stack Tecnológico)
 
-Este proyecto es una **aplicación web académica desarrollada como trabajo de tesis** que tiene como objetivo demostrar y analizar las vulnerabilidades de **Inyección SQL (SQLi)** en aplicaciones web PHP. La plataforma proporciona un entorno controlado donde es posible estudiar:
+El laboratorio utiliza una arquitectura de microservicios basada en contenedores Docker sobre una red aislada (`ctf_network`):
 
-- Métodos de ataque por inyección SQL
-- Impacto de estas vulnerabilidades en sistemas de bases de datos
-- Técnicas defensivas y validación de entrada
-- Prácticas recomendadas en seguridad de aplicaciones
-
-**Nota Académica:** Este proyecto es exclusivamente para fines educativos y de investigación. Su uso en sistemas en producción sin las debidas medidas de seguridad es **completamente desaconsejado**.
+*   **Nginx (Proxy/Web Server):** Alpine Nginx configurado para servir la aplicación y hacer proxy de las peticiones.
+*   **PHP 8.2 FPM (Backend):** Contenedor encargado de procesar la lógica vulnerable y comunicarse con la base de datos.
+*   **MariaDB 10.5 (Base de Datos):** Servidor de base de datos que aloja la información objetivo del laboratorio (tablas de usuarios y datos ficticios).
 
 ---
 
-## 🏗️ Arquitectura del Proyecto
+## Prerrequisitos
 
-### Estructura de Directorios
+Para desplegar este laboratorio, necesitas tener instalado:
 
-```
-TesisSQLi/
-├── src/
-│   ├── config/               # Configuración de la aplicación
-│   │   └── db.php           # Conexión a base de datos MariaDB
-│   └── public/              # Archivos públicamente accesibles
-│       ├── index.html       # Página de inicio
-│       ├── login.php        # Módulo de autenticación
-│       ├── register.php     # Módulo de registro de usuarios
-│       ├── dashboard.php    # Panel de control
-│       ├── auth.html        # Página de autenticación
-│       ├── setup.php        # Script de configuración inicial
-│       ├── assets/          # Recursos estáticos
-│       │   └── img/         # Imágenes del proyecto
-│       └── css/
-│           ├── styles.css          # Estilos principales
-│           └── custom-styles.css   # Estilos personalizados
-├── docker/                  # Configuración de contenedores
-│   ├── mariadb/
-│   │   └── init.sql         # Script de inicialización de BD
-│   ├── nginx/
-│   │   └── nginx.conf       # Configuración del servidor web
-│   └── php/
-│       └── Dockerfile       # Imagen de PHP personalizada
-├── docker-compose.yml       # Orquestación de servicios
-└── README.md               # Este archivo
-```
-
-### Componentes Principales
-
-| Componente | Descripción |
-|-----------|------------|
-| **src/config** | Módulo de configuración centralizado que maneja la conexión a la base de datos MariaDB con validación de credenciales. |
-| **src/public** | Interfaz web que contiene las páginas de autenticación, registro y dashboard. Punto de entrada para el análisis de vulnerabilidades SQLi. |
-| **docker/** | Infraestructura containerizada que permite replicabilidad y aislamiento del entorno de desarrollo. |
+*   [Docker Desktop](https://www.docker.com/products/docker-desktop/) (Windows/macOS) o **Docker Engine** (Linux).
+*   **Docker Compose** (V2 incluido con Docker Desktop).
+*   Git (Opcional, para clonar el repositorio).
 
 ---
 
-## 💻 Stack Tecnológico
+## Guía de Despliegue Paso a Paso
 
-### Backend
-- **PHP 8.1+** - Lenguaje de programación del lado del servidor
-- **MySQLi (Procedural)** - Interfaz de conexión a base de datos
+Sigue estos pasos para levantar el entorno de manera segura en tu máquina local.
 
-### Base de Datos
-- **MariaDB 10.5+** - Sistema gestor de base de datos relacional (fork de MySQL)
-- **SQL** - Lenguaje de consultas estructurado
+### 1. Clonar el repositorio y configurar variables de entorno
 
-### Frontend
-- **HTML5** - Estructura semántica del contenido
-- **CSS3** - Estilos y diseño responsivo
-- **JavaScript (Vanilla)** - Lógica de interacción del cliente
-
-### Infraestructura
-- **Docker & Docker Compose** - Containerización y orquestación
-- **Nginx** - Servidor web de alto rendimiento
-- **Linux** - Sistema operativo base
-
----
-
-## 🔧 Instalación
-
-### Requisitos Previos
-
-#### Instalación Local (Linux)
-
-- **PHP 8.1 o superior** con extensiones `mysqli` y `curl`
-- **MariaDB Server 10.5 o superior**
-- **Composer** (opcional, para gestión de dependencias futuras)
-- **Git** (para control de versiones)
-
-#### Con Docker
-
-- **Docker** 20.10+
-- **Docker Compose** 1.29+
-
----
-
-### Opción 1: Instalación Local en Linux
-
-#### 1. Clonar el Repositorio
-
+Clona el repositorio en tu máquina:
 ```bash
-git clone https://github.com/JoseDCV/TesisSQLi.git
+git clone <URL_DEL_REPOSITORIO>
 cd TesisSQLi
 ```
 
-#### 2. Instalar Dependencias del Sistema
-
-**Debian/Ubuntu:**
+A continuación, configura las credenciales copiando la plantilla:
 ```bash
-sudo apt update
-sudo apt install php8.1 php8.1-cli php8.1-mysql php8.1-curl -y
-sudo apt install mariadb-server mariadb-client -y
+cp .env.example .env
 ```
+*(Puedes editar el archivo `.env` si deseas cambiar las credenciales por defecto, aunque los valores iniciales sirven perfectamente para un entorno local/aislado).*
 
-**Fedora/RHEL:**
-```bash
-sudo dnf install php php-mysqlnd php-curl -y
-sudo dnf install mariadb-server mariadb -y
+### 2. Despliegue según tu Sistema Operativo
+
+#### Windows (PowerShell / CMD y Docker Desktop)
+Abre PowerShell o CMD y ejecuta:
+```powershell
+docker-compose up -d --build
 ```
+Una vez levantado, la aplicación estará disponible en `http://localhost`.
 
-#### 3. Configurar MariaDB
-
-```bash
-# Iniciar el servicio MariaDB
-sudo systemctl start mariadb
-sudo systemctl enable mariadb
-
-# Ejecutar configuración segura (recomendado)
-sudo mysql_secure_installation
-
-# Acceder a MariaDB y crear usuario para la tesis
-sudo mysql -u root -p
-```
-
-En la consola de MariaDB:
-```sql
--- Crear usuario para la aplicación
-CREATE USER 'tesis_user'@'localhost' IDENTIFIED BY 'tesis_password';
-
--- Crear base de datos
-CREATE DATABASE tesis_sqli CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-
--- Otorgar permisos
-GRANT ALL PRIVILEGES ON tesis_sqli.* TO 'tesis_user'@'localhost';
-FLUSH PRIVILEGES;
-
--- Salir
-EXIT;
-```
-
-#### 4. Importar Estructura de Base de Datos
-
-```bash
-mysql -u tesis_user -p tesis_sqli < docker/mariadb/init.sql
-# Ingresar contraseña: tesis_password
-```
-
-#### 5. Configurar Variables de Entorno
-
-Crear archivo `.env` en la raíz del proyecto:
-
-```bash
-# Configuración de Base de Datos
-DB_HOST=127.0.0.1
-DB_USER=tesis_user
-DB_PASSWORD=tesis_password
-DB_NAME=tesis_sqli
-
-# Configuración de Aplicación
-APP_ENV=development
-APP_DEBUG=true
-APP_PORT=8000
-```
-
-#### 6. Iniciar Servidor PHP Integrado
-
-```bash
-cd src/public
-php -S localhost:8000
-```
-
-La aplicación estará disponible en: **http://localhost:8000**
-
----
-
-### Opción 2: Instalación con Docker
-
-#### 1. Clonar el Repositorio
-
-```bash
-git clone https://github.com/JoseDCV/TesisSQLi.git
-cd TesisSQLi
-```
-
-#### 2. Crear Archivo .env
-
-```bash
-cat > .env << EOF
-DB_HOST=mariadb
-DB_USER=tesis_user
-DB_PASSWORD=tesis_password
-DB_NAME=tesis_sqli
-APP_ENV=development
-EOF
-```
-
-#### 3. Construir e Iniciar Contenedores
-
+#### macOS (Terminal y Docker Desktop Mac)
+Abre la Terminal en el directorio del proyecto y ejecuta:
 ```bash
 docker-compose up -d --build
 ```
+Accede a la aplicación en `http://localhost`.
 
-#### 4. Verificar Estado
-
+#### Linux (Terminal, Docker Engine y Docker Compose V2)
+Abre tu Terminal y ejecuta (puede requerir `sudo` si tu usuario no pertenece al grupo `docker`):
 ```bash
-docker-compose ps
-
-# Salida esperada:
-# CONTAINER ID   IMAGE               STATUS      PORTS
-# xxxxxxxx       tesisSQLi-php       Up 2 mins   0.0.0.0:8000->8000/tcp
-# xxxxxxxx       mariadb:latest      Up 2 mins   3306/tcp
+docker compose up -d --build
 ```
+*(Nota: En versiones modernas de Docker, el comando es `docker compose` sin el guion).*
+Accede a la aplicación en `http://localhost`.
 
-La aplicación estará disponible en: **http://localhost:8000**
+### 3. Instalación de la Base de Datos
+La primera vez que levantes el entorno, deberás poblar la base de datos. Para ello, visita la siguiente URL en tu navegador:
+`http://localhost/setup.php`
 
 ---
 
-### Script de Configuración Automática
+## Niveles del Laboratorio
 
-Se proporciona el script `setup.php` para automatizar la inicialización:
+El entorno está diseñado con 3 retos de Inyección SQL que aumentan en complejidad:
 
+1.  **Nivel Inicial (Bypass de Autenticación):**
+    Enfocado en vulnerar un formulario de login (Authentication Bypass) mediante inyección en campos de entrada, permitiendo acceso como administrador sin conocer la contraseña.
+2.  **Nivel Intermedio (Buscador / Exfiltración - Union-Based):**
+    Consiste en la explotación de un motor de búsqueda vulnerable para extraer información estructurada y oculta desde la base de datos utilizando operadores UNION.
+3.  **Nivel Avanzado (Verificador Ciego - Blind SQLi):**
+    Enfocado en vulnerabilidades donde no hay feedback directo (errores u outputs en pantalla). El atacante debe inferir la estructura y el contenido de la base de datos basándose en diferencias lógicas (Boolean-Based) o tiempos de respuesta (Time-Based).
+
+---
+
+## Detención, Limpieza e Higiene de Seguridad
+
+Es fundamental apagar los contenedores y limpiar los volúmenes una vez concluido el entrenamiento.
+
+**Para detener los contenedores (conservando los datos de la base de datos):**
 ```bash
-# Acceder a la URL de configuración
-curl http://localhost:8000/setup.php
-
-# O navegar en navegador
-# http://localhost:8000/setup.php
+docker-compose down
 ```
 
----
-
-## 📊 Estructura de Base de Datos
-
-### Tabla: `users`
-
-Tabla principal para almacenamiento de credenciales de usuario.
-
-| Campo | Tipo | Atributos | Descripción |
-|-------|------|-----------|------------|
-| `id` | INT | PRIMARY KEY, AUTO_INCREMENT | Identificador único del usuario |
-| `username` | VARCHAR(255) | NOT NULL, UNIQUE | Nombre de usuario único |
-| `email` | VARCHAR(255) | NOT NULL, UNIQUE | Correo electrónico único |
-| `password` | VARCHAR(255) | NOT NULL | Hash de contraseña |
-| `created_at` | TIMESTAMP | DEFAULT CURRENT_TIMESTAMP | Fecha y hora de creación |
-
-#### Índices Implementados
-
-```sql
-CREATE INDEX idx_username ON users(username);
-CREATE INDEX idx_email ON users(email);
-```
-
-**Justificación:** Los índices mejoran el rendimiento de búsquedas frecuentes por `username` y `email`.
-
-#### Charset y Collation
-
-- **Charset:** `utf8mb4` - Soporte completo de caracteres Unicode (incluyendo emojis)
-- **Collation:** `utf8mb4_unicode_ci` - Comparación insensible a mayúsculas/minúsculas
-
----
-
-## 🚀 Uso
-
-### Flujo de Uso Típico
-
-#### 1. Registro de Usuario
-
-```
-http://localhost:8000/register.php
-```
-
-- Completar formulario con `username`, `email` y `password`
-- La aplicación insertará los datos en la tabla `users`
-
-#### 2. Autenticación
-
-```
-http://localhost:8000/login.php
-```
-
-- Ingresar credenciales
-- Sistema verificará contra base de datos
-
-#### 3. Panel de Control
-
-```
-http://localhost:8000/dashboard.php
-```
-
-- Acceso a funcionalidades posteriores a autenticación
-
----
-
-## 🔬 Vulnerabilidades de Inyección SQL
-
-La aplicación **contiene vulnerabilidades deliberadas de SQLi** para fines académicos:
-
-### Puntos Vulnerables Identificados
-
-1. **Módulo de Autenticación** (`login.php`)
-   - Entrada de usuario concatenada directamente en queries SQL
-   - Parámetros GET/POST sin sanitización
-
-2. **Módulo de Registro** (`register.php`)
-   - Inserción directa de datos sin validación
-   - Sin uso de prepared statements
-
-### Ejemplos de Ataques Posibles
-
-**SQLi de Autenticación (Bypass):**
-```
-Username: admin' OR '1'='1
-Password: anything
-```
-
-**SQLi de Extracción de Datos:**
-```
-Username: ' UNION SELECT id, username, password, email, created_at FROM users--
-```
-
----
-
-## 📅 Roadmap
-
-### Fase 1: Estructura Base ✅
-- [x] Inicialización de proyecto
-- [x] Configuración de base de datos
-- [x] Interfaces HTML/CSS
-- [x] Módulos de login y registro
-
-### Fase 2: Dockerización (En Progreso 🔄)
-- [ ] Dockerfile optimizado para PHP
-- [ ] Configuración de nginx
-- [ ] Docker Compose funcional
-- [ ] Scripts de inicialización automática
-
-### Fase 3: Implementación de Vulnerabilidades (En Progreso 🔄)
-- [ ] Validación de puntos vulnerables
-- [ ] Documentación de técnicas de ataque
-- [ ] Casos de uso SQLi avanzados
-- [ ] Pruebas de penetración
-
-### Fase 4: Contramedidas y Seguridad (Planificado 📋)
-- [ ] Implementación de prepared statements
-- [ ] Validación y sanitización de entrada
-- [ ] Protección CSRF y XSS
-- [ ] Rate limiting y WAF
-- [ ] Encriptación de contraseñas (bcrypt/argon2)
-
-### Fase 5: Documentación Académica (Planificado 📋)
-- [ ] Guía completa de vulnerabilidades
-- [ ] Análisis de impacto
-- [ ] Benchmarking de ataques
-- [ ] Mejores prácticas defensivas
-
----
-
-## 📚 Referencias Académicas
-
-- OWASP Top 10 - Inyección SQL: https://owasp.org/www-community/attacks/SQL_Injection
-- CWE-89: Improper Neutralization of Special Elements used in an SQL Command: https://cwe.mitre.org/data/definitions/89.html
-- PHP MySQLi Documentation: https://www.php.net/manual/en/book.mysqli.php
-- MariaDB Security: https://mariadb.com/kb/en/security/
-
----
-
-## 📄 Licencia
-
-Este proyecto está licenciado bajo la Licencia MIT. Consulta el archivo [LICENSE](LICENSE) para más detalles.
-
-```
-MIT License
-
-Copyright (c) 2026 JoseDCV
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-```
-
----
-
-## ⚠️ Aviso Legal
-
-**ESTE PROYECTO ES SOLO PARA FINES EDUCATIVOS Y DE INVESTIGACIÓN**
-
-No se debe utilizar para atacar sistemas sin autorización. El autor no es responsable del mal uso de este código. Cumpla con las leyes aplicables en su jurisdicción.
-
----
-
-## 👤 Autor
-
-**José David Castillo Vargas** (JoseDCV)
-
-Trabajo de Tesis - Análisis de Vulnerabilidades de Inyección SQL en Aplicaciones Web PHP
-
----
-
-## 🤝 Contribuciones
-
-Las contribuciones son bienvenidas. Para cambios mayores, por favor abre un issue primero para discutir los cambios propuestos.
-
+**Para detener los contenedores y ELIMINAR la base de datos (Reset completo):**
 ```bash
-git checkout -b feature/nueva-funcionalidad
-git commit -am 'Añadir nueva funcionalidad'
-git push origin feature/nueva-funcionalidad
+docker-compose down -v
 ```
 
----
-
-## 📧 Contacto
-
-Para preguntas o sugerencias académicas, por favor abre un [GitHub Issue](https://github.com/JoseDCV/TesisSQLi/issues).
+> **Nota sobre Seguridad:** Las credenciales y variables críticas se manejan exclusivamente a través del archivo `.env`. Este archivo está excluido del control de versiones mediante `.gitignore`. **Nunca subas tu archivo `.env` a un repositorio público.**
 
 ---
 
-**Última actualización:** 20 de enero de 2026  
-**Versión:** 1.0.0
+## Licencia y Consideraciones Éticas
+
+⚠️ **ADVERTENCIA E IMPORTANTE:**
+Este proyecto se ha desarrollado **exclusivamente con fines educativos y de investigación**. Las vulnerabilidades expuestas aquí son intencionales y su objetivo es la formación técnica y la mejora de habilidades en Ciberseguridad.
+
+*   No despliegues este entorno en servidores expuestos públicamente a Internet.
+*   Utilízalo únicamente en redes locales o máquinas virtuales bajo tu control absoluto.
+*   Cualquier uso indebido de los conocimientos adquiridos a partir de este laboratorio en sistemas ajenos sin consentimiento expreso es ilegal y contrario a la ética profesional.

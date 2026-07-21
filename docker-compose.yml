@@ -1,0 +1,57 @@
+services:
+  db:
+    image: mariadb:10.5
+    container_name: tesis_db
+    restart: always
+    env_file:
+      - .env
+    environment:
+      - MARIADB_ROOT_PASSWORD=${DB_PASSWORD:-tesis_password}
+      - MARIADB_DATABASE=${DB_NAME:-tesis_sqli}
+      - MARIADB_USER=${DB_USER:-tesis_user}
+      - MARIADB_PASSWORD=${DB_PASSWORD:-tesis_password}
+    volumes:
+      - mariadb_data:/var/lib/mysql
+      # Opcional: Montar un init.sql para autoconfigurar la DB
+      # - ./docker/mariadb/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - ctf_network
+
+  php:
+    build:
+      context: ./docker/php
+      dockerfile: Dockerfile
+    container_name: tesis_php
+    restart: always
+    env_file:
+      - .env
+    environment:
+      - DB_HOST=db
+    volumes:
+      - ./src:/var/www/html
+    networks:
+      - ctf_network
+    depends_on:
+      - db
+
+  web:
+    image: nginx:alpine
+    container_name: tesis_nginx
+    restart: always
+    ports:
+      - "80:80"
+    volumes:
+      - ./src:/var/www/html
+      - ./docker/nginx/nginx.conf:/etc/nginx/conf.d/default.conf
+    networks:
+      - ctf_network
+    depends_on:
+      - php
+
+networks:
+  ctf_network:
+    driver: bridge
+    name: ctf_network
+
+volumes:
+  mariadb_data:

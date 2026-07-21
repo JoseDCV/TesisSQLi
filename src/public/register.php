@@ -33,40 +33,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         http_response_code(400);
     }
     else {
-        // Encriptar la contraseña
-        $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+        // VULNERABILIDAD INTENCIONAL PARA TESIS: Concatenación directa sin preparar sentencias
+        // y sin encriptar contraseñas para permitir un entorno explícitamente vulnerable.
+        $query = "INSERT INTO users (username, email, password) VALUES ('$username', '$email', '$password')";
         
-        // Preparar consulta SQL usando Prepared Statement
-        $stmt = $conn->prepare('INSERT INTO users (username, email, password) VALUES (?, ?, ?)');
-        
-        if (!$stmt) {
-            $response['message'] = 'Error al preparar la consulta: ' . $conn->error;
-            http_response_code(500);
+        if ($conn->query($query) === TRUE) {
+            $response['success'] = true;
+            $response['message'] = 'Registro exitoso. Redirigiendo...';
+            http_response_code(200);
+            
+            // Redirigir a index.html después de 2 segundos
+            header('Refresh: 2; url=index.html');
+            
         } else {
-            // Vincular parámetros (s = string)
-            $stmt->bind_param('sss', $username, $email, $hashed_password);
-            
-            // Ejecutar la consulta
-            if ($stmt->execute()) {
-                $response['success'] = true;
-                $response['message'] = 'Registro exitoso. Redirigiendo...';
-                http_response_code(200);
-                
-                // Redirigir a index.html después de 2 segundos
-                header('Refresh: 2; url=index.html');
-                
+            // Manejar errores específicos o mostrar el error SQL producto de la inyección
+            if ($conn->errno === 1062) {
+                $response['message'] = 'El usuario o email ya está registrado.';
             } else {
-                // Manejar errores específicos
-                if ($conn->errno === 1062) {
-                    $response['message'] = 'El usuario o email ya está registrado.';
-                } else {
-                    $response['message'] = 'Error al registrar el usuario: ' . $stmt->error;
-                }
-                http_response_code(400);
+                $response['message'] = 'Error SQL: ' . $conn->error;
             }
-            
-            // Cerrar statement
-            $stmt->close();
+            http_response_code(400);
         }
     }
     

@@ -3,144 +3,231 @@
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-        <meta name="description" content="" />
-        <meta name="author" content="" />
-        <title>Login/Registro - Ciberseguridad</title>
+        <title>Portal de Acceso - SecurityPro</title>
         <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
-        <!-- Font Awesome icons (free version)-->  
         <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
-        <!-- Google fonts-->  
-        <link href="https://fonts.googleapis.com/css?family=Roboto|Inter|Orbitron" rel="stylesheet" />
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
         <style>
-            * {
-                box-sizing: border-box;
-            }
+            * { box-sizing: border-box; margin: 0; padding: 0; }
             body {
-                background-image: url('https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?q=80&w=1920&auto=format&fit=crop');
-                background-size: cover;
-                color: #ffffff;
-                font-family: 'Roboto', sans-serif;
+                font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+                background-color: #f8f9fc;
                 display: flex;
+                height: 100vh;
+                color: #2c3e50;
+            }
+            .split-left {
+                width: 50%;
+                background: linear-gradient(135deg, rgba(30, 60, 114, 0.9) 0%, rgba(42, 82, 152, 0.9) 100%), url('https://images.unsplash.com/photo-1504384308090-c894fdcc538d?q=80&w=2070&auto=format&fit=crop');
+                background-size: cover;
+                background-position: center;
+                display: flex;
+                flex-direction: column;
                 justify-content: center;
                 align-items: center;
-                height: 100vh;
-                margin: 0;
-                position: relative;
-            }
-            .overlay {
-                position: absolute;
-                top: 0;
-                left: 0;
-                right: 0;
-                bottom: 0;
-                background-color: rgba(0, 0, 0, 0.5);
-                z-index: 1;
-            }
-            .card {
-                background: rgba(255, 255, 255, 0.1);
-                border-radius: 15px;
-                backdrop-filter: blur(10px);
-                padding: 20px;
-                box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-                width: 400px;
+                color: white;
+                padding: 40px;
                 text-align: center;
-                position: relative;
-                border: 1px solid rgba(0, 255, 0, 0.3);
-                z-index: 2;
             }
-            h2 {
-                font-family: 'Orbitron', sans-serif;
+            .split-left h1 {
+                font-size: 3rem;
+                font-weight: 700;
                 margin-bottom: 20px;
+                letter-spacing: -1px;
             }
-            .tab {
-                display: inline-block;
+            .split-left p {
+                font-size: 1.1rem;
+                font-weight: 300;
+                max-width: 400px;
+                opacity: 0.9;
+                line-height: 1.6;
+            }
+            .split-right {
                 width: 50%;
-                padding: 10px 0;
-                cursor: pointer;
-                border: 1px solid transparent;
-                border-radius: 5px;
-                margin: 0;
-                transition: background 0.3s, color 0.3s;
-            }
-            .tab.active {
-                background: rgba(0, 255, 0, 0.5);
-                color: #ffffff;
-            }
-            input {
-                background: rgba(255, 255, 255, 0.2);
-                border: none;
-                border-radius: 5px;
-                padding: 10px;
-                margin: 10px 0;
-                width: 100%;
-                color: #ffffff;
-                transition: border 0.3s, box-shadow 0.3s;
-            }
-            input:focus {
-                outline: none;
-                box-shadow: 0 0 5px #00ff00;
-            }
-            button {
-                background: linear-gradient(90deg, #00ff00, #00ccff);
-                border: none;
-                border-radius: 5px;
-                padding: 10px;
-                color: #ffffff;
-                cursor: pointer;
-                transition: box-shadow 0.3s;
-            }
-            button:hover {
-                box-shadow: 0 0 10px #00ff00;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                background-color: #ffffff;
+                position: relative;
             }
             .back-btn {
                 position: absolute;
-                top: 20px;
-                left: 20px;
-                background: rgba(0, 0, 0, 0.6);
-                border: 1px solid #00ff00;
-                color: #ffffff;
-                padding: 10px 15px;
-                border-radius: 5px;
+                top: 40px;
+                left: 40px;
+                color: #7f8c8d;
                 text-decoration: none;
-                font-family: 'Roboto', sans-serif;
-                font-size: 14px;
-                cursor: pointer;
-                transition: background 0.3s, color 0.3s;
-                z-index: 3;
+                font-size: 0.9rem;
+                font-weight: 500;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                transition: color 0.2s;
             }
-            .back-btn:hover {
-                background: #00ff00;
-                color: #000000;
+            .back-btn:hover { color: #2c3e50; }
+            
+            .auth-container {
+                width: 100%;
+                max-width: 420px;
+                padding: 40px;
+            }
+            .auth-header {
+                text-align: center;
+                margin-bottom: 40px;
+            }
+            .auth-header h2 {
+                font-size: 1.8rem;
+                font-weight: 600;
+                color: #1a202c;
+                margin-bottom: 10px;
+            }
+            .auth-header p {
+                color: #718096;
+                font-size: 0.95rem;
+            }
+            
+            .tabs {
+                display: flex;
+                margin-bottom: 30px;
+                border-bottom: 2px solid #e2e8f0;
+            }
+            .tab {
+                flex: 1;
+                text-align: center;
+                padding: 12px 0;
+                cursor: pointer;
+                font-weight: 600;
+                color: #a0aec0;
+                transition: all 0.3s;
+                border-bottom: 2px solid transparent;
+                margin-bottom: -2px;
+            }
+            .tab.active {
+                color: #3182ce;
+                border-bottom-color: #3182ce;
+            }
+            .tab:hover:not(.active) { color: #4a5568; }
+            
+            .form-group {
+                margin-bottom: 20px;
+            }
+            .form-group label {
+                display: block;
+                font-size: 0.85rem;
+                font-weight: 600;
+                color: #4a5568;
+                margin-bottom: 8px;
+            }
+            
+            input {
+                width: 100%;
+                padding: 14px 16px;
+                border: 1px solid #cbd5e0;
+                border-radius: 8px;
+                font-size: 1rem;
+                color: #2d3748;
+                background-color: #f7fafc;
+                transition: all 0.2s;
+                font-family: inherit;
+            }
+            input:focus {
+                outline: none;
+                border-color: #3182ce;
+                background-color: #ffffff;
+                box-shadow: 0 0 0 3px rgba(49, 130, 206, 0.15);
+            }
+            input::placeholder { color: #a0aec0; }
+            
+            button {
+                width: 100%;
+                background-color: #3182ce;
+                color: white;
+                border: none;
+                border-radius: 8px;
+                padding: 14px;
+                font-size: 1rem;
+                font-weight: 600;
+                cursor: pointer;
+                transition: background-color 0.2s, transform 0.1s;
+                font-family: inherit;
+                margin-top: 10px;
+                box-shadow: 0 4px 6px rgba(49, 130, 206, 0.2);
+            }
+            button:hover { background-color: #2b6cb0; }
+            button:active { transform: translateY(1px); }
+            
+            @media (max-width: 900px) {
+                .split-left { display: none; }
+                .split-right { width: 100%; }
             }
         </style>
     </head>
-    <body id="page-top">
-        <a href="index.html" class="back-btn"><i class="fas fa-arrow-left"></i> Volver</a>
-        <div class="overlay"></div>
-        <div class="card">
-            <h2>SYSTEM ACCESS</h2>
-            <div class="tabs">
-                <div class="tab active" onclick="showForm('login')">Iniciar Sesión</div>
-                <div class="tab" onclick="showForm('register')">Registro</div>
-            </div>
-            <form id="login" class="form" action="login.php" method="POST">
-                <input type="text" name="username" placeholder="Usuario" required />
-                <input type="password" name="password" placeholder="Contraseña" required />
-                <button type="submit">Entrar</button>
-            </form>
-            <form id="register" class="form" style="display:none;" action="register.php" method="POST">
-                <input type="text" name="username" placeholder="Usuario" required />
-                <input type="email" name="email" placeholder="Correo" required />
-                <input type="password" name="password" placeholder="Contraseña" required />
-                <button type="submit">Registrarse</button>
-            </form>
+    <body>
+        <div class="split-left">
+            <i class="fas fa-shield-alt" style="font-size: 4rem; margin-bottom: 25px; color: #63b3ed;"></i>
+            <h1>SecurityPro</h1>
+            <p>Plataforma empresarial de gestión integral y auditoría de recursos. Accede a tu entorno de trabajo seguro.</p>
         </div>
+        
+        <div class="split-right">
+            <a href="index.html" class="back-btn"><i class="fas fa-arrow-left"></i> Regresar al inicio</a>
+            
+            <div class="auth-container">
+                <div class="auth-header">
+                    <h2 id="form-title">Iniciar Sesión</h2>
+                    <p id="form-subtitle">Ingresa tus credenciales corporativas</p>
+                </div>
+                
+                <div class="tabs">
+                    <div class="tab active" onclick="showForm('login', 'Iniciar Sesión', 'Ingresa tus credenciales corporativas')">Acceso</div>
+                    <div class="tab" onclick="showForm('register', 'Crear Cuenta', 'Solicitar acceso al portal empresarial')">Registro</div>
+                </div>
+                
+                <!-- LOGIN FORM -->
+                <form id="login" class="form" action="login.php" method="POST">
+                    <div class="form-group">
+                        <label>Usuario / Correo Electrónico</label>
+                        <input type="text" name="username" placeholder="ej. j.doe" required />
+                    </div>
+                    <div class="form-group">
+                        <label>Contraseña</label>
+                        <input type="password" name="password" placeholder="••••••••" required />
+                    </div>
+                    <button type="submit">Autenticar <i class="fas fa-sign-in-alt ml-2"></i></button>
+                    <div style="text-align: center; margin-top: 20px;">
+                        <a href="#" style="color: #3182ce; font-size: 0.85rem; font-weight: 500; text-decoration: none;">¿Olvidó su contraseña?</a>
+                    </div>
+                </form>
+                
+                <!-- REGISTER FORM -->
+                <form id="register" class="form" style="display:none;" action="register.php" method="POST">
+                    <div class="form-group">
+                        <label>Nombre de Usuario Corporativo</label>
+                        <input type="text" name="username" placeholder="ej. j.doe" required />
+                    </div>
+                    <div class="form-group">
+                        <label>Correo Electrónico Institucional</label>
+                        <input type="email" name="email" placeholder="nombre@empresa.com" required />
+                    </div>
+                    <div class="form-group">
+                        <label>Contraseña de Acceso</label>
+                        <input type="password" name="password" placeholder="Mínimo 8 caracteres" required />
+                    </div>
+                    <button type="submit">Completar Registro <i class="fas fa-user-plus ml-2"></i></button>
+                </form>
+            </div>
+        </div>
+        
         <script>
-            function showForm(form) {
+            function showForm(formId, title, subtitle) {
                 document.querySelectorAll('.form').forEach(f => f.style.display = 'none');
-                document.getElementById(form).style.display = 'block';
+                document.getElementById(formId).style.display = 'block';
+                
                 document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-                document.querySelector(`.tab[onclick="showForm('${form}')"]`).classList.add('active');
+                event.target.classList.add('active');
+                
+                document.getElementById('form-title').innerText = title;
+                document.getElementById('form-subtitle').innerText = subtitle;
             }
         </script>
     </body>

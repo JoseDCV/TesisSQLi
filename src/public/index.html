@@ -1,207 +1,403 @@
 <!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-        <meta name="description" content="" />
-        <meta name="author" content="" />
-        <title>Proyecto - SQLI</title>
-        <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
-        <!-- Font Awesome icons (free version)-->
-        <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
-        <!-- Google fonts-->
-        <link href="https://fonts.googleapis.com/css?family=Varela+Round" rel="stylesheet" />
-        <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet" />
-        <!-- Core theme CSS (includes Bootstrap)-->
-        <link href="css/styles.css" rel="stylesheet" />
-        <link href="css/custom-styles.css" rel="stylesheet" />
-    </head>
-    <body id="page-top">
-        <!-- Navigation-->
-        <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
-            <div class="container px-4 px-lg-5">
-                <a class="navbar-brand" href="#page-top">Ciberseguridad</a>
-                <button class="navbar-toggler navbar-toggler-right" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
-                    Menu
-                    <i class="fas fa-bars"></i>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarResponsive">
-                    <ul class="navbar-nav ms-auto">
-                        <li class="nav-item"><a class="nav-link" href="#about">Noticias</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#projects">Herramientas</a></li>
-                        <li class="nav-item"><a class="nav-link" href="auth.html">Registrate/Inicia Sesión</a></li>
-                    </ul>
+<html lang="es" class="scroll-smooth">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <title>SecurityPro - Plataforma de Ciberseguridad</title>
+    <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
+
+    <!-- Font Awesome -->
+    <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet" />
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        dark: {
+                            900: '#070b14', // Very deep blue/black
+                            800: '#0f172a', // Slate 900
+                            700: '#1e293b', // Slate 800
+                        },
+                        neon: {
+                            cyan: '#00f0ff',
+                            green: '#00ff66',
+                            blue: '#0088ff'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #070b14;
+            color: #f8fafc;
+            overflow-x: hidden;
+        }
+
+        /* Background Particle & Grid Effect */
+        .bg-cyber {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image:
+                radial-gradient(circle at 15% 30%, rgba(0, 240, 255, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 85% 70%, rgba(0, 255, 102, 0.05) 0%, transparent 50%),
+                linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+            background-size: 100% 100%, 100% 100%, 40px 40px, 40px 40px;
+            z-index: -1;
+        }
+
+        /* Glassmorphism Elements */
+        .glass-card {
+            background: rgba(15, 23, 42, 0.4);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .glass-card:hover {
+            background: rgba(30, 41, 59, 0.6);
+            border-color: rgba(0, 240, 255, 0.3);
+            box-shadow: 0 0 25px rgba(0, 240, 255, 0.1), 0 20px 40px -10px rgba(0, 0, 0, 0.7);
+            transform: translateY(-5px);
+        }
+
+        .glass-nav {
+            background: rgba(7, 11, 20, 0.8);
+            backdrop-filter: blur(16px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        /* Neon Texts & Borders */
+        .neon-text-cyan {
+            color: #00f0ff;
+            text-shadow: 0 0 15px rgba(0, 240, 255, 0.5);
+        }
+
+        .neon-text-green {
+            color: #00ff66;
+            text-shadow: 0 0 15px rgba(0, 255, 102, 0.4);
+        }
+
+        .neon-border {
+            position: relative;
+        }
+
+        .neon-border::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #00f0ff, #00ff66);
+            box-shadow: 0 0 10px rgba(0, 240, 255, 0.6);
+            transform: scaleX(0);
+            transform-origin: right;
+            transition: transform 0.3s ease;
+        }
+
+        .neon-border:hover::after {
+            transform: scaleX(1);
+            transform-origin: left;
+        }
+
+        /* Animations */
+        @keyframes pulse-glow {
+
+            0%,
+            100% {
+                opacity: 0.5;
+                transform: scale(1);
+            }
+
+            50% {
+                opacity: 0.8;
+                transform: scale(1.05);
+            }
+        }
+
+        .animate-glow {
+            animation: pulse-glow 6s infinite ease-in-out;
+        }
+    </style>
+</head>
+
+<body class="antialiased selection:bg-neon-cyan selection:text-black">
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 glass-nav transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <div class="flex items-center gap-3">
+                    <i class="fas fa-shield-halved text-3xl neon-text-cyan"></i>
+                    <span class="font-bold text-2xl tracking-tight">Security<span
+                            class="text-neon-cyan drop-shadow-[0_0_8px_rgba(0,240,255,0.5)]">Pro</span></span>
+                </div>
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="#inicio"
+                        class="text-gray-300 hover:text-white font-medium neon-border py-2 transition-colors">Inicio</a>
+                    <a href="#herramientas"
+                        class="text-gray-300 hover:text-white font-medium neon-border py-2 transition-colors">Herramientas</a>
+                    <a href="auth.html"
+                        class="ml-4 px-6 py-2.5 rounded-lg bg-transparent border border-cyan-500 text-cyan-400 hover:bg-cyan-500 hover:text-dark-900 hover:shadow-[0_0_20px_rgba(0,240,255,0.4)] font-semibold transition-all duration-300 flex items-center gap-2">
+                        Acceso <i class="fas fa-sign-in-alt"></i>
+                    </a>
+                </div>
+                <!-- Mobile menu button -->
+                <div class="md:hidden flex items-center">
+                    <button class="text-gray-300 hover:text-white focus:outline-none" id="mobile-menu-btn">
+                        <i class="fas fa-bars text-2xl"></i>
+                    </button>
                 </div>
             </div>
-        </nav>
-        <!-- Masthead-->
-        <header class="masthead">
-            <div class="container px-4 px-lg-5 d-flex h-100 align-items-center justify-content-center">
-                <div class="d-flex justify-content-center">
-                    <div class="text-center">
-                        <h1 class="mx-auto my-0 text-uppercase">Ciberseguridad</h1>
-                        <h2 class="text-green mx-auto mt-2 mb-5">Enterate de lo que está sucediendo en el mundo digital.</h2>
-                        <a class="btn btn-primary" href="#about">Pwned</a>
+        </div>
+        <!-- Mobile Menu Panel -->
+        <div class="md:hidden hidden bg-dark-800/95 backdrop-blur-lg border-b border-gray-800" id="mobile-menu">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                <a href="#inicio"
+                    class="block px-3 py-2 text-base font-medium text-gray-300 hover:text-white hover:bg-dark-700 rounded-md">Inicio</a>
+                <a href="#herramientas"
+                    class="block px-3 py-2 text-base font-medium text-gray-300 hover:text-white hover:bg-dark-700 rounded-md">Herramientas</a>
+                <a href="auth.html"
+                    class="block px-3 py-2 text-base font-medium text-cyan-400 hover:text-cyan-300 hover:bg-dark-700 rounded-md">Portal
+                    de Acceso</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="inicio" class="relative min-h-screen flex items-center justify-center pt-20 overflow-hidden">
+        <div class="bg-cyber"></div>
+
+        <!-- Glowing ambient orbs behind hero -->
+        <div
+            class="absolute top-1/3 left-1/4 w-96 h-96 bg-cyan-900/30 rounded-full blur-[120px] pointer-events-none animate-glow">
+        </div>
+        <div class="absolute bottom-1/4 right-1/4 w-96 h-96 bg-emerald-900/20 rounded-full blur-[120px] pointer-events-none animate-glow"
+            style="animation-delay: 3s;"></div>
+
+        <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <div
+                class="inline-flex items-center gap-2 mb-6 px-4 py-1.5 rounded-full border border-cyan-500/30 bg-cyan-500/10 backdrop-blur-sm">
+                <span class="relative flex h-3 w-3">
+                    <span
+                        class="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span>
+                    <span class="relative inline-flex rounded-full h-3 w-3 bg-cyan-500"></span>
+                </span>
+                <span class="text-sm font-medium text-cyan-400 uppercase tracking-wider">Sistema Activo y
+                    Protegido</span>
+            </div>
+
+            <h1 class="text-5xl md:text-7xl font-extrabold tracking-tight mb-6 leading-tight">
+                Gestión de Identidad y <br class="hidden md:block" />
+                <span
+                    class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-emerald-400 drop-shadow-lg">
+                    Auditoría Avanzada
+                </span>
+            </h1>
+
+            <p class="mt-4 text-xl md:text-2xl text-slate-400 max-w-3xl mx-auto font-light leading-relaxed mb-10">
+                Asegura los activos digitales de tu organización con monitorización continua, control de acceso
+                centralizado y herramientas tácticas integradas.
+            </p>
+
+            <div class="flex flex-col sm:flex-row gap-5 justify-center items-center">
+                <a href="auth.html"
+                    class="w-full sm:w-auto px-8 py-4 rounded-lg bg-cyan-600 hover:bg-cyan-500 text-white font-bold text-lg shadow-[0_0_20px_rgba(0,240,255,0.3)] transition-all duration-300 flex items-center justify-center gap-2">
+                    Ingresar al Portal <i class="fas fa-arrow-right"></i>
+                </a>
+                <a href="#herramientas"
+                    class="w-full sm:w-auto px-8 py-4 rounded-lg bg-transparent border border-slate-600 hover:border-cyan-400 hover:text-cyan-400 text-slate-300 font-bold text-lg transition-all duration-300 glass-card">
+                    Descubrir Herramientas
+                </a>
+            </div>
+        </div>
+
+        <!-- Scroll indicator -->
+        <div class="absolute bottom-10 left-1/2 -translate-x-1/2 animate-bounce">
+            <a href="#herramientas"
+                class="text-slate-500 hover:text-cyan-400 transition-colors flex flex-col items-center gap-2">
+                <span class="text-xs uppercase tracking-widest font-semibold">Explorar</span>
+                <i class="fas fa-chevron-down text-xl"></i>
+            </a>
+        </div>
+    </section>
+
+    <!-- Herramientas Section -->
+    <section id="herramientas" class="py-24 relative bg-dark-900 border-t border-white/5">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-5xl font-bold mb-4 text-white">Herramientas de <span
+                        class="neon-text-green">Ciberseguridad</span></h2>
+                <div class="h-1 w-20 bg-gradient-to-r from-cyan-500 to-emerald-500 mx-auto rounded-full mb-6"></div>
+                <p class="text-slate-400 max-w-2xl mx-auto text-lg leading-relaxed">Suite integral para análisis de
+                    vulnerabilidades, pruebas de penetración y monitoreo de tráfico de red bajo estándares
+                    profesionales.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+
+                <!-- Tool: Nmap -->
+                <div class="glass-card rounded-2xl p-8 group relative overflow-hidden">
+                    <div
+                        class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 to-cyan-400 opacity-0 group-hover:opacity-100 transition-opacity">
                     </div>
+                    <div
+                        class="w-14 h-14 rounded-xl bg-blue-500/10 flex items-center justify-center mb-6 border border-blue-500/20 group-hover:border-blue-400/50 group-hover:bg-blue-500/20 transition-all">
+                        <i
+                            class="fas fa-network-wired text-2xl text-blue-400 group-hover:text-cyan-300 group-hover:drop-shadow-[0_0_8px_rgba(0,240,255,0.8)]"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-white mb-3">Nmap</h3>
+                    <p class="text-slate-400 leading-relaxed text-sm">
+                        Explorador de red y escáner de puertos. Fundamental para el descubrimiento de hosts y auditoría
+                        de servicios en infraestructuras críticas.
+                    </p>
+                </div>
+
+                <!-- Tool: Wireshark -->
+                <div class="glass-card rounded-2xl p-8 group relative overflow-hidden">
+                    <div
+                        class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-indigo-500 to-blue-400 opacity-0 group-hover:opacity-100 transition-opacity">
+                    </div>
+                    <div
+                        class="w-14 h-14 rounded-xl bg-indigo-500/10 flex items-center justify-center mb-6 border border-indigo-500/20 group-hover:border-indigo-400/50 group-hover:bg-indigo-500/20 transition-all">
+                        <i
+                            class="fas fa-wave-square text-2xl text-indigo-400 group-hover:text-blue-300 group-hover:drop-shadow-[0_0_8px_rgba(99,102,241,0.8)]"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-white mb-3">Wireshark</h3>
+                    <p class="text-slate-400 leading-relaxed text-sm">
+                        Analizador de protocolos de red. Permite la captura y el análisis interactivo del tráfico de red
+                        a un nivel micro-detallado para forense.
+                    </p>
+                </div>
+
+                <!-- Tool: Burp Suite -->
+                <div class="glass-card rounded-2xl p-8 group relative overflow-hidden">
+                    <div
+                        class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-orange-500 to-amber-400 opacity-0 group-hover:opacity-100 transition-opacity">
+                    </div>
+                    <div
+                        class="w-14 h-14 rounded-xl bg-orange-500/10 flex items-center justify-center mb-6 border border-orange-500/20 group-hover:border-orange-400/50 group-hover:bg-orange-500/20 transition-all">
+                        <i
+                            class="fas fa-bug text-2xl text-orange-400 group-hover:text-amber-300 group-hover:drop-shadow-[0_0_8px_rgba(249,115,22,0.8)]"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-white mb-3">Burp Suite</h3>
+                    <p class="text-slate-400 leading-relaxed text-sm">
+                        Plataforma integrada para pruebas de seguridad en aplicaciones web. Incluye proxy interceptor y
+                        escáner de vulnerabilidades avanzado.
+                    </p>
+                </div>
+
+                <!-- Tool: Metasploit -->
+                <div class="glass-card rounded-2xl p-8 group relative overflow-hidden">
+                    <div
+                        class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-red-500 to-rose-400 opacity-0 group-hover:opacity-100 transition-opacity">
+                    </div>
+                    <div
+                        class="w-14 h-14 rounded-xl bg-red-500/10 flex items-center justify-center mb-6 border border-red-500/20 group-hover:border-red-400/50 group-hover:bg-red-500/20 transition-all">
+                        <i
+                            class="fas fa-crosshairs text-2xl text-red-400 group-hover:text-rose-300 group-hover:drop-shadow-[0_0_8px_rgba(239,68,68,0.8)]"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-white mb-3">Metasploit</h3>
+                    <p class="text-slate-400 leading-relaxed text-sm">
+                        Framework de pruebas de penetración. Proporciona información sobre vulnerabilidades y ayuda en
+                        el desarrollo de firmas IDS/IPS.
+                    </p>
+                </div>
+
+                <!-- Tool: SQLmap -->
+                <div class="glass-card rounded-2xl p-8 group relative overflow-hidden">
+                    <div
+                        class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-emerald-500 to-green-400 opacity-0 group-hover:opacity-100 transition-opacity">
+                    </div>
+                    <div
+                        class="w-14 h-14 rounded-xl bg-emerald-500/10 flex items-center justify-center mb-6 border border-emerald-500/20 group-hover:border-emerald-400/50 group-hover:bg-emerald-500/20 transition-all">
+                        <i
+                            class="fas fa-database text-2xl text-emerald-400 group-hover:text-green-300 group-hover:drop-shadow-[0_0_8px_rgba(16,185,129,0.8)]"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-white mb-3">SQLmap</h3>
+                    <p class="text-slate-400 leading-relaxed text-sm">
+                        Herramienta de automatización para detectar y explotar vulnerabilidades de inyección SQL (SQLi)
+                        y auditar servidores de bases de datos.
+                    </p>
+                </div>
+
+                <!-- Tool: John the Ripper -->
+                <div class="glass-card rounded-2xl p-8 group relative overflow-hidden">
+                    <div
+                        class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-purple-500 to-fuchsia-400 opacity-0 group-hover:opacity-100 transition-opacity">
+                    </div>
+                    <div
+                        class="w-14 h-14 rounded-xl bg-purple-500/10 flex items-center justify-center mb-6 border border-purple-500/20 group-hover:border-purple-400/50 group-hover:bg-purple-500/20 transition-all">
+                        <i
+                            class="fas fa-key text-2xl text-purple-400 group-hover:text-fuchsia-300 group-hover:drop-shadow-[0_0_8px_rgba(168,85,247,0.8)]"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-white mb-3">John the Ripper</h3>
+                    <p class="text-slate-400 leading-relaxed text-sm">
+                        Suite de recuperación y auditoría de contraseñas. Diseñado para detectar credenciales débiles
+                        mediante fuerza bruta y ataques de diccionario.
+                    </p>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="border-t border-white/10 bg-dark-900 pt-16 pb-8 relative z-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-6">
+                <div class="flex items-center gap-3">
+                    <i class="fas fa-shield-halved text-2xl text-slate-500"></i>
+                    <span class="font-bold text-xl text-slate-300">Security<span
+                            class="text-slate-500">Pro</span></span>
+                </div>
+                <div class="text-slate-500 text-sm text-center">
+                    &copy; 2026 SecurityPro Platform. Proyecto de Tesis - Ciberseguridad.
+                </div>
+                <div class="flex gap-5">
+                    <a href="https://github.com/JoseDCV/TesisSQLi"
+                        class="text-slate-500 hover:text-white transition-colors" target="_blank"><i
+                            class="fab fa-github text-xl"></i></a>
+                    <a href="#" class="text-slate-500 hover:text-cyan-400 transition-colors"><i
+                            class="fas fa-envelope text-xl"></i></a>
                 </div>
             </div>
-        </header>
-        <!-- About-->
-        <section class="about-section text-center" id="about">
-            <div class="container px-4 px-lg-5">
-                <div class="row gx-4 gx-lg-5 justify-content-center">
-                    <div class="col-lg-8">
-                        <h2 class="text-white mb-4">La Ciberseguridad un punto clave en la era digital</h2>
-                        <p class="text-white-50">
-                            La ciberseguridad es el conjunto de prácticas y tecnologías para proteger sistemas, redes y datos de ataques digitales y accesos no autorizados. Su objetivo principal es garantizar la confidencialidad, integridad y disponibilidad de la información, protegiendo contra amenazas como el robo de datos y la interrupción de operaciones comerciales.
-                        
-                            <a href="https://github.com/JoseDCV/TesisSQLi">GitHubProyect.</a>
-                            -> Información referente al proyecto.
-                        </p>
-                    </div>
-                </div>
-                <img class="img-fluid" src="assets/img/Anonymous-Photoroom.png" alt="..." />
-            </div>
-        </section>
-        <!-- Projects-->
-        <section class="projects-section bg-light" id="projects">
-            <div class="container px-4 px-lg-5">
-                <!-- Featured Project Row-->
-                <div class="row gx-0 mb-4 mb-lg-5 align-items-center">
-                    <div class="col-xl-8 col-lg-7"><img class="img-fluid mb-3 mb-lg-0" src="assets/img/ciberseguridad.webp" alt="..." /></div>
-                    <div class="col-xl-4 col-lg-5">
-                        <div class="featured-text text-center text-lg-left">
-                            <h4>Ciberseguridad</h4>
-                            <p class="text-black-50 mb-0">La ciberseguridad es la práctica de proteger sistemas, redes, dispositivos y datos de ataques digitales. Se refiere al conjunto de procesos, procedimientos, tecnologías y comportamientos diseñados para defenderse contra accesos no autorizados, daños o el robo de información confidencial.</p>
-                        </div>
-                    </div>
-                </div>
-                <!-- Project One Row-->
-                <div class="row gx-0 mb-5 mb-lg-0 justify-content-center">
-                    <div class="col-lg-6"><img class="img-fluid" src="assets/img/Security.png" alt="..." /></div>
-                    <div class="col-lg-6">
-                        <div class="bg-black text-center h-100 project">
-                            <div class="d-flex h-100">
-                                <div class="project-text w-100 my-auto text-center text-lg-left">
-                                    <h4 class="text-white">SecurityPro</h4>
-                                    <p class="mb-0 text-white-50">Con nuestro software protege todos tus datos, cambiate a la versión Pro</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- Project Two Row-->
-                <div class="row gx-0 justify-content-center">
-                    <div class="col-lg-6"><img class="img-fluid" src="assets/img/SecurityPro.png" alt="..." /></div>
-                    <div class="col-lg-6 order-lg-first">
-                        <div class="bg-black text-center h-100 project">
-                            <div class="d-flex h-100">
-                                <div class="project-text w-100 my-auto text-center text-lg-right">
-                                    <h4 class="text-white">SecurityPro - Version Demo</h4>
-                                    <p class="mb-0 text-white-50">Contactanos para solicitar una versión Demo para tu empresa.</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-        <!-- Signup-->
-        <section class="signup-section" id="signup">
-            <div class="container px-4 px-lg-5">
-                <div class="row gx-4 gx-lg-5">
-                    <div class="col-md-10 col-lg-8 mx-auto text-center">
-                        <i class="far fa-paper-plane fa-2x mb-2 text-white"></i>
-                        <h2 class="text-white mb-5">Contactanos</h2>
-                        <!-- * * * * * * * * * * * * * * *-->
-                        <!-- * * SB Forms Contact Form * *-->
-                        <!-- * * * * * * * * * * * * * * *-->
-                        <!-- This form is pre-integrated with SB Forms.-->
-                        <!-- To make this form functional, sign up at-->
-                        <!-- https://startbootstrap.com/solution/contact-forms-->
-                        <!-- to get an API token!-->
-                        <form class="form-signup" id="contactForm" data-sb-form-api-token="API_TOKEN">
-                            <!-- Email address input-->
-                            <div class="row input-group-newsletter">
-                                <div class="col"><input class="form-control" id="emailAddress" type="email" placeholder="Enter email address..." aria-label="Enter email address..." data-sb-validations="required,email" /></div>
-                                <div class="col-auto"><button class="btn btn-primary disabled" id="submitButton" type="submit">¡Notificame!</button></div>
-                            </div>
-                            <div class="invalid-feedback mt-2" data-sb-feedback="emailAddress:required">An email is required.</div>
-                            <div class="invalid-feedback mt-2" data-sb-feedback="emailAddress:email">Email is not valid.</div>
-                            <!-- Submit success message-->
-                            <!---->
-                            <!-- This is what your users will see when the form-->
-                            <!-- has successfully submitted-->
-                            <div class="d-none" id="submitSuccessMessage">
-                                <div class="text-center mb-3 mt-2 text-white">
-                                    <div class="fw-bolder">Form submission successful!</div>
-                                    To activate this form, sign up at
-                                    <br />
-                                    <a href="https://startbootstrap.com/solution/contact-forms">https://startbootstrap.com/solution/contact-forms</a>
-                                </div>
-                            </div>
-                            <!-- Submit error message-->
-                            <!---->
-                            <!-- This is what your users will see when there is-->
-                            <!-- an error submitting the form-->
-                            <div class="d-none" id="submitErrorMessage"><div class="text-center text-danger mb-3 mt-2">Error sending message!</div></div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </section>
-        <!-- Contact-->
-        <section class="contact-section bg-black">
-            <div class="container px-4 px-lg-5">
-                <div class="row gx-4 gx-lg-5">
-                    <div class="col-md-4 mb-3 mb-md-0">
-                        <div class="card py-4 h-100">
-                            <div class="card-body text-center">
-                                <i class="fas fa-map-marked-alt text-primary mb-2"></i>
-                                <h4 class="text-uppercase m-0">Dirección</h4>
-                                <hr class="my-4 mx-auto" />
-                                <div class="small text-black-50">Avenida Nueva Leonor esquina Santigo Torres N:08-24</div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4 mb-3 mb-md-0">
-                        <div class="card py-4 h-100">
-                            <div class="card-body text-center">
-                                <i class="fas fa-envelope text-primary mb-2"></i>
-                                <h4 class="text-uppercase m-0">Email</h4>
-                                <hr class="my-4 mx-auto" />
-                                <div class="small text-black-50"><a href="#!">contact@securitypro.com</a></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4 mb-3 mb-md-0">
-                        <div class="card py-4 h-100">
-                            <div class="card-body text-center">
-                                <i class="fas fa-mobile-alt text-primary mb-2"></i>
-                                <h4 class="text-uppercase m-0">Teléfono</h4>
-                                <hr class="my-4 mx-auto" />
-                                <div class="small text-black-50">+1 (555) 902-8832</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="social d-flex justify-content-center">
-                    <a class="mx-2" href="#!"><i class="fab fa-twitter"></i></a>
-                    <a class="mx-2" href="#!"><i class="fab fa-facebook-f"></i></a>
-                    <a class="mx-2" href="#!"><i class="fab fa-github"></i></a>
-                </div>
-            </div>
-        </section>
-        <!-- Footer-->
-        <footer class="footer bg-black small text-center text-white-50"><div class="container px-4 px-lg-5">Copyright &copy; SecurityPro 2025</div></footer>
-        <!-- Bootstrap core JS-->
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
-        <!-- Core theme JS-->
-        <script src="js/scripts.js"></script>
-        <!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *-->
-        <!-- * *                               SB Forms JS                               * *-->
-        <!-- * * Activate your form at https://startbootstrap.com/solution/contact-forms * *-->
-        <!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *-->
-        <script src="https://cdn.startbootstrap.com/sb-forms-latest.js"></script>
-    </body>
+        </div>
+    </footer>
+
+    <!-- Mobile Menu Script -->
+    <script>
+        document.getElementById('mobile-menu-btn').addEventListener('click', function () {
+            var menu = document.getElementById('mobile-menu');
+            if (menu.classList.contains('hidden')) {
+                menu.classList.remove('hidden');
+            } else {
+                menu.classList.add('hidden');
+            }
+        });
+    </script>
+</body>
+
 </html>

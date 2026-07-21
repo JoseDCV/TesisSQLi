@@ -1,10 +1,10 @@
 <?php
 
-// Configuración de conexión para instalación
-$host = '127.0.0.1';
-$user = 'root';
-$password = '';
-$db_name = 'tesis_sqli';
+// Configuración de conexión para instalación adaptada a Docker/Local
+$host = getenv('DB_HOST') ?: '127.0.0.1';
+$user = getenv('DB_USER') ?: 'root';
+$password = getenv('DB_PASSWORD') !== false ? getenv('DB_PASSWORD') : '';
+$db_name = getenv('DB_NAME') ?: 'tesis_sqli';
 
 // Conectar a MySQL sin especificar base de datos
 $conn = new mysqli($host, $user, $password);
@@ -56,6 +56,31 @@ if ($conn->query($sql_create_table) === TRUE) {
 $result = $conn->query("SHOW TABLES LIKE 'users'");
 if ($result->num_rows > 0) {
     echo "✓ Tabla 'users' verificada exitosamente.\n";
+    
+    // Poblar con registro de prueba principal (admin para el bypass)
+    $password_hash = password_hash('tesis_password', PASSWORD_DEFAULT);
+    $sql_insert = "INSERT IGNORE INTO users (username, email, password) VALUES ('admin', 'admin@securitypro.local', '$password_hash')";
+    if ($conn->query($sql_insert)) {
+        echo "✓ Registro de prueba 'admin' insertado correctamente.\n";
+    }
+
+    // Poblar con 10 registros adicionales para realismo en UNION y Blind SQLi
+    $nombres = ['jdoe', 'mlopez', 'aramirez', 'sconnor', 'tstark', 'bwayne', 'ckent', 'dprince', 'pparker', 'bbanner'];
+    $apellidos = ['smith', 'garcia', 'martinez', 'jones', 'davis', 'rodriguez', 'miller', 'wilson', 'moore', 'taylor'];
+    
+    echo "Generando 10 registros aleatorios...\n";
+    $inserted_count = 0;
+    for ($i = 0; $i < 10; $i++) {
+        $rand_user = $nombres[array_rand($nombres)] . rand(10, 99);
+        $rand_email = $rand_user . "@securitypro.local";
+        $rand_pass = password_hash(bin2hex(random_bytes(8)), PASSWORD_DEFAULT);
+        
+        $sql_random = "INSERT IGNORE INTO users (username, email, password) VALUES ('$rand_user', '$rand_email', '$rand_pass')";
+        if ($conn->query($sql_random)) {
+            $inserted_count++;
+        }
+    }
+    echo "✓ $inserted_count registros adicionales insertados correctamente.\n";
 }
 
 // Mostrar estructura de la tabla

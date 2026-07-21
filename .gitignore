@@ -1,0 +1,8 @@
+.env
+*.log
+logs/
+.cursor/
+.vscode/
+.idea/
+.DS_Store
+cookies.txt
