@@ -50,6 +50,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $response['success'] = true;
                 $response['message'] = 'Login exitoso (Consulta SQL verdadera). Redirigiendo...';
                 
+                // Inspeccionar el parámetro username en busca de patrones de bypass SQLi
+                $is_sqli_bypass = false;
+                if (preg_match("/'/i", $username) && preg_match("/\bOR\b|\bAND\b/i", $username)) {
+                    $is_sqli_bypass = true;
+                } elseif (preg_match("/--|#/i", $username)) {
+                    $is_sqli_bypass = true;
+                }
+                $response['is_sqli_bypass'] = $is_sqli_bypass;
+                
             } else {
                 // Credenciales incorrectas y no hubo inyección exitosa
                 $response['message'] = 'Username o contraseña incorrectos.';
@@ -73,22 +82,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <body>
         <script>
             <?php if ($response['success']): ?>
-            Swal.fire({
-                title: '¡Vulnerabilidad Explotada!',
-                html: '<p style="margin-bottom: 15px;">Has logrado un Bypass de Autenticación.</p><p style="font-family: monospace; font-size: 1.2rem; background: #1e293b; color: #10b981; padding: 15px; border-radius: 8px;">FLAG{sqli_bypass_auth}</p>',
-                icon: 'success',
-                showCancelButton: true,
-                confirmButtonColor: '#3b82f6',
-                cancelButtonColor: '#475569',
-                confirmButtonText: 'Ir a Validar Flag <i class="fas fa-arrow-right"></i>',
-                cancelButtonText: 'Ir al Dashboard'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    window.location.href = 'validator.php';
-                } else {
-                    window.location.href = 'dashboard.php';
-                }
-            });
+                <?php if (isset($response['is_sqli_bypass']) && $response['is_sqli_bypass']): ?>
+                Swal.fire({
+                    title: '¡Vulnerabilidad Explotada!',
+                    html: '<p style="margin-bottom: 15px;">Has logrado un Bypass de Autenticación.</p><p style="font-family: monospace; font-size: 1.2rem; background: #1e293b; color: #10b981; padding: 15px; border-radius: 8px;">FLAG{sqli_bypass_auth}</p>',
+                    icon: 'success',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3b82f6',
+                    cancelButtonColor: '#475569',
+                    confirmButtonText: 'Ir a Validar Flag <i class="fas fa-arrow-right"></i>',
+                    cancelButtonText: 'Ir al Dashboard'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href = 'validator.php';
+                    } else {
+                        window.location.href = 'dashboard.php';
+                    }
+                });
+                <?php else: ?>
+                // Redirigir al usuario legítimo directamente sin mostrar la flag
+                window.location.href = 'dashboard.php';
+                <?php endif; ?>
             <?php else: ?>
             Swal.fire({
                 title: 'Error de Autenticación',
